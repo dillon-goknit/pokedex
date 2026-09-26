@@ -38,3 +38,37 @@ func TestCleanInput(t *testing.T) {
 		}
 	}
 }
+
+func TestCommandResponse(t *testing.T) {
+	cases := []struct {
+		input    string
+		expected string
+	}{
+		{
+			input:    "well hello there",
+			expected: "Your command was: well",
+		},
+		{
+			input:    "POKEMON was underrated",
+			expected: "Your command was: pokemon",
+		},
+		{
+			input:    "    charmander   ",
+			expected: "Your command was: charmander",
+		},
+		{
+			input:    "",
+			expected: "",
+		},
+		{
+			input:    " ",
+			expected: "",
+		},
+	}
+	for _, c := range cases {
+		actual := commandResponse(c.input)
+		if actual != c.expected {
+			t.Errorf("commandResponse(%q): got %q, want %q", c.input, actual, c.expected)
+		}
+	}
+}

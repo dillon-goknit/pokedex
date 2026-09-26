@@ -9,3 +9,12 @@ func cleanInput(text string) []string {
 	words := strings.Fields(lowercase)
 	return words
 }
+
+func commandResponse(command string) string {
+	words := cleanInput(command)
+	if len(words) == 0 {
+		return ""
+	}
+	first := words[0]
+	return "Your command was: " + first
+}
