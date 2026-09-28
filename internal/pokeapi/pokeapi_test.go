@@ -1,9 +1,13 @@
 package pokeapi
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestGetLocationAreas(t *testing.T) {
-	resp, err := GetLocationAreas(BaseURL)
+	client := NewClient(time.Minute)
+	resp, err := client.GetLocationAreas(BaseURL)
 	if err != nil {
 		t.Fatalf("GetLocationAreas returned error: %v", err)
 	}

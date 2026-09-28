@@ -23,7 +23,7 @@ func commandMapb(cfg *config) error {
 }
 
 func showLocationAreas(cfg *config, url string) error {
-	resp, err := pokeapi.GetLocationAreas(url)
+	resp, err := cfg.client.GetLocationAreas(url)
 	if err != nil {
 		return err
 	}

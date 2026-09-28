@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/dillon-goknit/pokedex/internal/pokeapi"
 )
 
 type cliCommand struct {
@@ -15,6 +17,7 @@ type cliCommand struct {
 
 type config struct {
 	commands map[string]cliCommand
+	client   *pokeapi.Client
 	next     *string
 	previous *string
 }
