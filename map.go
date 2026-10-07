@@ -6,7 +6,7 @@ import (
 	"github.com/dillon-goknit/pokedex/internal/pokeapi"
 )
 
-func commandMap(cfg *config) error {
+func commandMap(cfg *config, s []string) error {
 	url := pokeapi.BaseURL
 	if cfg.next != nil {
 		url = *cfg.next
@@ -14,7 +14,7 @@ func commandMap(cfg *config) error {
 	return showLocationAreas(cfg, url)
 }
 
-func commandMapb(cfg *config) error {
+func commandMapb(cfg *config, s []string) error {
 	if cfg.previous == nil {
 		fmt.Println("You are on the first page")
 		return nil
