@@ -59,15 +59,6 @@ func cleanInput(text string) []string {
 	return words
 }
 
-func commandResponse(command string) string {
-	words := cleanInput(command)
-	if len(words) == 0 {
-		return ""
-	}
-	first := words[0]
-	return "Your command was: " + first
-}
-
 func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
