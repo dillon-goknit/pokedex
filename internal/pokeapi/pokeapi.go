@@ -34,23 +34,9 @@ type Pokemon struct {
 const BaseURL = "https://pokeapi.co/api/v2/location-area"
 
 func (c *Client) GetLocationAreas(url string) (LocationAreasResp, error) {
-	data, ok := c.cache.Get(url)
-	if !ok {
-		res, err := http.Get(url)
-		if err != nil {
-			return LocationAreasResp{}, err
-		}
-		defer res.Body.Close()
-
-		if res.StatusCode > 299 {
-			return LocationAreasResp{}, fmt.Errorf("unexpected status: %s", res.Status)
-		}
-
-		data, err = io.ReadAll(res.Body)
-		if err != nil {
-			return LocationAreasResp{}, err
-		}
-		c.cache.Add(url, data)
+	data, err := c.fetch(url)
+	if err != nil {
+		return LocationAreasResp{}, err
 	}
 
 	var resp LocationAreasResp
@@ -62,30 +48,37 @@ func (c *Client) GetLocationAreas(url string) (LocationAreasResp, error) {
 
 func (c *Client) GetLocationArea(areaName string) (LocationAreaDetail, error) {
 	url := fmt.Sprintf("%s/%s", BaseURL, areaName)
-	data, ok := c.cache.Get(url)
-	if !ok {
-		res, err := http.Get(url)
-		if err != nil {
-			return LocationAreaDetail{}, err
-		}
-		defer res.Body.Close()
-
-		if res.StatusCode > 299 {
-			return LocationAreaDetail{}, fmt.Errorf("unexpected status: %s", res.Status)
-		}
-
-		data, err = io.ReadAll(res.Body)
-		if err != nil {
-			return LocationAreaDetail{}, err
-		}
-
-		c.cache.Add(url, data)
+	data, err := c.fetch(url)
+	if err != nil {
+		return LocationAreaDetail{}, err
 	}
 
 	var resp LocationAreaDetail
 	if err := json.Unmarshal(data, &resp); err != nil {
 		return LocationAreaDetail{}, err
 	}
-
 	return resp, nil
+}
+
+func (c *Client) fetch(url string) ([]byte, error) {
+	if data, ok := c.cache.Get(url); ok {
+		return data, nil
+	}
+
+	res, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode > 299 {
+		return nil, fmt.Errorf("unexpected status: %s", res.Status)
+	}
+
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	c.cache.Add(url, data)
+	return data, nil
 }
