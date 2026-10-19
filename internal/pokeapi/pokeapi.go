@@ -31,7 +31,13 @@ type Pokemon struct {
 	Name string `json:"name"`
 }
 
+type PokemonDetail struct {
+	Name           string `json:"name"`
+	BaseExperience int    `json:"base_experience"`
+}
+
 const BaseURL = "https://pokeapi.co/api/v2/location-area"
+const PokemonURL = "https://pokeapi.co/api/v2/pokemon"
 
 func (c *Client) GetLocationAreas(url string) (LocationAreasResp, error) {
 	data, err := c.fetch(url)
@@ -56,6 +62,20 @@ func (c *Client) GetLocationArea(areaName string) (LocationAreaDetail, error) {
 	var resp LocationAreaDetail
 	if err := json.Unmarshal(data, &resp); err != nil {
 		return LocationAreaDetail{}, err
+	}
+	return resp, nil
+}
+
+func (c *Client) GetPokemon(name string) (PokemonDetail, error) {
+	url := fmt.Sprintf("%s/%s", PokemonURL, name)
+	data, err := c.fetch(url)
+	if err != nil {
+		return PokemonDetail{}, err
+	}
+
+	var resp PokemonDetail
+	if err := json.Unmarshal(data, &resp); err != nil {
+		return PokemonDetail{}, err
 	}
 	return resp, nil
 }
